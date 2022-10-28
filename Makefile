@@ -4,8 +4,9 @@ ESP_TOOL := $(VENV)/bin/esptool.py
 SYSTEM_PYTON := python3.9
 ESPHOME_BIN := $(VENV)/bin/esphome
 
+.PHONY: dashboard
 dashboard: $(ESPHOME_BIN)
-	$(ESPHOME_BIN) dashboard
+	$(ESPHOME_BIN) dashboard .
 
 $(PIP_BIN):
 	$(SYSTEM_PYTON) -m venv $(VENV)
