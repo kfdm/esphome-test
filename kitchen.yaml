@@ -1,0 +1,28 @@
+esphome:
+  name: kitchen
+
+esp32:
+  board: m5stick-c
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  password: ""
+
+wifi:
+  ssid: "***REMOVED***"
+  password: "***REMOVED***"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Kitchen Fallback Hotspot"
+    password: "***REMOVED***"
+
+captive_portal:
