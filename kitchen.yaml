@@ -1,34 +1,18 @@
-# https://github.com/apolselli/home-assistant-config/blob/master/esphome/m5stickc_env.yaml
 substitutions:
   devicename: m5stickcplus-kitchen
-  upper_devicename: Kitchen
+  friendly_name: Kitchen
 
 esphome:
   name: $devicename
 
+packages:
+  base: !include common/base.yaml
+
+# https://docs.m5stack.com/en/core/m5stickc_plus
 esp32:
   board: m5stick-c
   framework:
     type: arduino
-
-wifi:
-  networks:
-    - ssid: !secret wifi_ssid
-      password: !secret wifi_password
-
-  ap:
-    ssid: ${upper_devicename} Fallback
-    password: !secret wifi_password
-
-logger:
-
-api:
-
-ota:
-
-web_server:
-
-captive_portal:
 
 i2c:
   - id: hat
@@ -45,7 +29,7 @@ binary_sensor:
     pin:
       number: GPIO37
       inverted: true
-    name: ${upper_devicename} Button A
+    name: ${friendly_name} Button A
     on_press:
       then:
         - switch.toggle: led1
@@ -53,17 +37,12 @@ binary_sensor:
     pin:
       number: GPIO39
       inverted: true
-    name: ${upper_devicename} Button B
+    name: ${friendly_name} Button B
     on_press:
       then:
         - switch.toggle: led1
 
 sensor:
-  - platform: wifi_signal
-    name: ${upper_devicename} WiFi Signal
-  - platform: uptime
-    name: ${upper_devicename} Uptime
-
   # https://docs.m5stack.com/en/hat/hat_envIII
   # https://esphome.io/components/sensor/sht3xd.html
   - platform: sht3xd
@@ -71,9 +50,9 @@ sensor:
     address: 0x44
     update_interval: 60s
     temperature:
-      name: ${upper_devicename} SHT30 Temperature
+      name: ${friendly_name} SHT30 Temperature
     humidity:
-      name: ${upper_devicename} SHT30 Humidity
+      name: ${friendly_name} SHT30 Humidity
 
   # https://esphome.io/components/sensor/qmp6988.html
   - platform: qmp6988
@@ -81,9 +60,9 @@ sensor:
     address: 0x70
     update_interval: 60s
     temperature:
-      name: ${upper_devicename} QMP6988 Temperature
+      name: ${friendly_name} QMP6988 Temperature
     pressure:
-      name: ${upper_devicename} QMP6988 Pressure
+      name: ${friendly_name} QMP6988 Pressure
     iir_filter: 2x
 
   # https://docs.m5stack.com/en/unit/tvoc
@@ -93,19 +72,17 @@ sensor:
     address: 0x58
     update_interval: 60s
     eco2:
-      name: ${upper_devicename} SGP30 eCO2
+      name: ${friendly_name} SGP30 eCO2
       accuracy_decimals: 1
     tvoc:
-      name: ${upper_devicename} SGP30 TVOC
+      name: ${friendly_name} SGP30 TVOC
       accuracy_decimals: 1
     store_baseline: yes
 
 switch:
-  - platform: restart
-    name: ${upper_devicename} Restart
   - platform: gpio
     pin:
       number: GPIO10
       inverted: true
-    name: ${upper_devicename} Led
+    name: ${friendly_name} Led
     id: led1

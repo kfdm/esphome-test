@@ -1,26 +1,26 @@
 # Enable logging
+# https://esphome.io/components/logger.html
 logger:
 
 # Enable Home Assistant API
+# https://esphome.io/components/api.html
 api:
   password: ""
 
+# https://esphome.io/components/ota.html
 ota:
   password: ""
 
+# https://esphome.io/components/web_server.html
+web_server:
+
+# https://esphome.io/components/wifi.html
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
-
-  # Enable fallback hotspot (captive portal) in case wifi connection fails
-  ap:
-    ssid: ${friendly_name} Fallback
-    password: !secret wifi_password
-
-captive_portal:
+  fast_connect: true
 
 # Other Defaults
-
 sensor:
   - platform: wifi_signal
     name: ${friendly_name} WiFi Signal
