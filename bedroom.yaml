@@ -5,28 +5,19 @@ substitutions:
 esphome:
   name: $devicename
 
+packages:
+  base: !include common/base.yaml
+
+# https://docs.m5stack.com/en/core/atom_lite
 esp32:
   board: m5stack-atom
   framework:
     type: arduino
 
-# Enable logging
-logger:
+i2c:
+  sda: 26
+  scl: 33
+  scan: true
+# https://docs.m5stack.com/en/unit/co2
+# https://esphome.io/components/sensor/scd4x.html
 
-# Enable Home Assistant API
-api:
-  password: ""
-
-ota:
-  password: ""
-
-wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
-
-  # Enable fallback hotspot (captive portal) in case wifi connection fails
-  ap:
-    ssid: ${upper_devicename} Fallback
-    password: !secret wifi_password
-
-captive_portal:

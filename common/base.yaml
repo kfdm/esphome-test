@@ -1,0 +1,32 @@
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  password: ""
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: ${upper_devicename} Fallback
+    password: !secret wifi_password
+
+captive_portal:
+
+# Other Defaults
+
+sensor:
+  - platform: wifi_signal
+    name: ${upper_devicename} WiFi Signal
+  - platform: uptime
+    name: ${upper_devicename} Uptime
+
+switch:
+  - platform: restart
+    name: ${upper_devicename} Restart
