@@ -1,6 +1,6 @@
 substitutions:
   devicename: m5stick-atom-bedroom
-  upper_devicename: Bedroom
+  friendly_name: Bedroom
 
 esphome:
   name: $devicename
@@ -25,8 +25,39 @@ sensor:
     address: 0x62
     update_interval: 60s
     co2:
-      name: "${upper_devicename} CO2"
+      id: co2
+      name: "${friendly_name} CO2"
     temperature:
-      name: "${upper_devicename} Temperature"
+      id: temperature
+      name: "${friendly_name} Temperature"
     humidity:
-      name: "${upper_devicename} Humidity"
+      id: humidity
+      name: "${friendly_name} Humidity"
+
+binary_sensor:
+  # https://esphome.io/components/switch/gpio
+  - platform: gpio
+    pin:
+      number: 39
+      inverted: true
+    id: button
+    name: ${friendly_name} Button
+    on_press:
+      then:
+        - light.toggle: status_led
+
+light:
+  # https://esphome.io/components/light/index.html
+  - platform: fastled_clockless
+    chipset: WS2812B
+    pin: 27
+    num_leds: 1
+    rgb_order: GRB
+    id: status_led
+    name: ${friendly_name} Light
+    on_turn_on:
+
+    effects:
+      - random:
+      - flicker:
+      - addressable_rainbow:
