@@ -29,3 +29,7 @@ kitchen:  $(ESPHOME_BIN)
 bedroom:  $(ESPHOME_BIN)
 	 $(ESPHOME_BIN) run bedroom.yaml
 
+.PHONY: downplease
+downplease:  $(ESPHOME_BIN)
+	 $(ESPHOME_BIN) run downplease.yaml --device down-please.local
+
