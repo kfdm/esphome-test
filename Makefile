@@ -24,3 +24,8 @@ list: $(PIP_BIN)
 .PHONY: kitchen
 kitchen:  $(ESPHOME_BIN)
 	 $(ESPHOME_BIN) run kitchen.yaml
+
+.PHONY: bedroom
+bedroom:  $(ESPHOME_BIN)
+	 $(ESPHOME_BIN) run bedroom.yaml
+
