@@ -1,0 +1,96 @@
+substitutions:
+  devicename: down-please
+  friendly_name: Down Please
+
+esphome:
+  name: $devicename
+
+packages:
+  base: !include common/base.yaml
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# A virtual switch to represent our armed/disarmed state
+globals:
+  - id: armed
+    type: bool
+    restore_value: true
+    initial_value: "false"
+
+switch:
+  - platform: template
+    name: Armed
+    id: buzzer_armed
+    restore_state: false
+    turn_on_action:
+      - light.turn_on: armed_led
+      - globals.set:
+          id: armed
+          value: "true"
+    turn_off_action:
+      - light.turn_off: armed_led
+      - globals.set:
+          id: armed
+          value: "false"
+    lambda: |-
+      return id(armed);
+
+# https://wiki.seeedstudio.com/Grove-PIR_Motion_Sensor/
+binary_sensor:
+  - platform: gpio
+    pin: GPIO32
+    name: "PIR Motion"
+    device_class: motion
+    on_press:
+      then:
+        if:
+          condition:
+            lambda: "return id(armed);"
+          then:
+            if:
+              condition: rtttl.is_playing
+              then:
+                - logger.log: "Playback is active!"
+              else:
+                - logger.log: "Starting playback"
+                # https://esphome.io/components/rtttl.html
+                # https://en.wikipedia.org/wiki/Ring_Tone_Text_Transfer_Language
+                - rtttl.play: "siren:d=32,o=7,b=100:d,e,d,e,d,e,d,e"
+          else:
+            - logger.log: "Motion detected but disarmed"
+
+  # https://esphome.io/components/button/index.html
+  # https://esphome.io/components/binary_sensor/gpio.html
+  - platform: gpio
+    pin:
+      number: GPIO14
+      mode:
+        input: true
+        pullup: true
+    filters:
+      - delayed_on: 10ms
+    on_press:
+      then:
+        - switch.toggle: buzzer_armed
+    id: button
+
+# https://www.seeedstudio.com/Grove-Blue-LED-Button.html
+# https://esphome.io/components/output/ledc.html
+light:
+  - platform: binary
+    output: armed_status
+    id: armed_led
+
+output:
+  - platform: ledc
+    pin: GPIO26
+    id: buzzer_out
+  - id: armed_status
+    platform: gpio
+    pin: GPIO12
+
+rtttl:
+  output: buzzer_out
