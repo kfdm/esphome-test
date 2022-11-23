@@ -41,7 +41,7 @@ switch:
 # https://wiki.seeedstudio.com/Grove-PIR_Motion_Sensor/
 binary_sensor:
   - platform: gpio
-    pin: GPIO32
+    pin: GPIO2
     name: "PIR Motion"
     device_class: motion
     on_press:
@@ -66,7 +66,7 @@ binary_sensor:
   # https://esphome.io/components/binary_sensor/gpio.html
   - platform: gpio
     pin:
-      number: GPIO14
+      number: GPIO18
       mode:
         input: true
         pullup: true
@@ -90,7 +90,7 @@ output:
     id: buzzer_out
   - id: armed_status
     platform: gpio
-    pin: GPIO12
+    pin: GPIO19
 
 rtttl:
   output: buzzer_out

@@ -31,5 +31,5 @@ bedroom:  $(ESPHOME_BIN)
 
 .PHONY: downplease
 downplease:  $(ESPHOME_BIN)
-	 $(ESPHOME_BIN) run downplease.yaml --device down-please.local
+	 $(ESPHOME_BIN) run downplease.yaml
 
