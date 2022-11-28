@@ -17,6 +17,10 @@ $(ESPHOME_BIN): $(PIP_BIN)
 $(ESP_TOOL): $(PIP_BIN)
 	$(PIP_BIN) install esptool
 
+.PHONY: pip
+pip: $(PIP_BIN)
+	$(PIP_BIN) install esphome --upgrade
+
 .PHONY: list
 list: $(PIP_BIN)
 	$(PIP_BIN) list
@@ -36,3 +40,7 @@ office:  $(ESPHOME_BIN)
 .PHONY: living
 living:  $(ESPHOME_BIN)
 	 $(ESPHOME_BIN) run living.yaml
+
+.PHONY: bell
+bell:  $(ESPHOME_BIN)
+	 $(ESPHOME_BIN) run bell.yaml  --device bell.local

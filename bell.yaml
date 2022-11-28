@@ -1,0 +1,136 @@
+substitutions:
+  devicename: bell
+  friendly_name: Bell
+
+esphome:
+  name: $devicename
+
+packages:
+  base: !include common/base.yaml
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# https://esphome.io/components/mqtt.html
+mqtt:
+  broker: !secret mqtt_broker
+  username: !secret mqtt_bell_username
+  password: !secret mqtt_bell_password
+  log_topic: null
+  topic_prefix: esphome/${devicename}
+
+globals:
+  - id: yellow_active
+    type: bool
+    restore_value: true
+    initial_value: "false"
+  - id: red_active
+    type: bool
+    restore_value: true
+    initial_value: "false"
+
+switch:
+  - platform: template
+    name: Yellow
+    id: yellow_toggle
+    restore_state: false
+    turn_on_action:
+      - light.turn_on: yellow_led
+      # - mqtt.publish:
+      #     topic: devices/yellow/button
+      #     payload: 1
+      - globals.set:
+          id: yellow_active
+          value: "true"
+    turn_off_action:
+      - light.turn_off: yellow_led
+      # - mqtt.publish:
+      #     topic: devices/yellow/button
+      #     payload: 0
+      - globals.set:
+          id: yellow_active
+          value: "false"
+    lambda: |-
+      return id(yellow_active);
+
+  - platform: template
+    name: Red
+    id: red_toggle
+    restore_state: false
+    turn_on_action:
+      - light.turn_on: red_led
+      # - mqtt.publish:
+      #     topic: devices/red/button
+      #     payload: 1
+      - globals.set:
+          id: red_active
+          value: "true"
+    turn_off_action:
+      - light.turn_off: red_led
+      # - mqtt.publish:
+      #     topic: devices/red/button
+      #     payload: 0
+      - globals.set:
+          id: red_active
+          value: "false"
+    lambda: |-
+      return id(red_active);
+
+binary_sensor:
+  # https://esphome.io/components/button/index.html
+  # https://esphome.io/components/binary_sensor/gpio.html
+  - platform: gpio
+    pin:
+      number: GPIO04
+      mode:
+        input: true
+        pullup: true
+    filters:
+      - delayed_on: 10ms
+    on_press:
+      then:
+        - switch.toggle: yellow_toggle
+    id: yellow_button
+  - platform: gpio
+    pin:
+      number: GPIO18
+      mode:
+        input: true
+        pullup: true
+    filters:
+      - delayed_on: 10ms
+    on_press:
+      then:
+        - switch.toggle: red_toggle
+    id: red_button
+
+# https://www.seeedstudio.com/Grove-Blue-LED-Button.html
+# https://esphome.io/components/output/ledc.html
+light:
+  - platform: binary
+    output: yellow_pin
+    id: yellow_led
+  - platform: binary
+    output: red_pin
+    id: red_led
+
+# https://esphome.io/components/output/gpio.html
+output:
+  - platform: gpio
+    pin: GPIO33
+    id: bell_out
+  - id: yellow_pin
+    platform: gpio
+    pin: GPIO02
+  - id: red_pin
+    platform: gpio
+    pin: GPIO19
+
+button:
+  # https://esphome.io/components/button/output.html
+  - platform: output
+    name: Bell
+    output: bell_out
+    duration: 200ms
