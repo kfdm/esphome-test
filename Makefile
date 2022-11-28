@@ -17,6 +17,10 @@ $(ESPHOME_BIN): $(PIP_BIN)
 $(ESP_TOOL): $(PIP_BIN)
 	$(PIP_BIN) install esptool
 
+.PHONY: pip
+pip: $(PIP_BIN)
+	$(PIP_BIN) install esphome --upgrade
+
 .PHONY: list
 list: $(PIP_BIN)
 	$(PIP_BIN) list
@@ -29,3 +33,6 @@ kitchen:  $(ESPHOME_BIN)
 bedroom:  $(ESPHOME_BIN)
 	 $(ESPHOME_BIN) run bedroom.yaml
 
+.PHONY: bell
+bell:  $(ESPHOME_BIN)
+	 $(ESPHOME_BIN) run bell.yaml  --device bell.local
