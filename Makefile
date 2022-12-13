@@ -29,3 +29,6 @@ kitchen:  $(ESPHOME_BIN)
 bedroom:  $(ESPHOME_BIN)
 	 $(ESPHOME_BIN) run bedroom.yaml
 
+.PHONY: office
+office:  $(ESPHOME_BIN)
+	 $(ESPHOME_BIN) run office.yaml
