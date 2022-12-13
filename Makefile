@@ -32,3 +32,7 @@ bedroom:  $(ESPHOME_BIN)
 .PHONY: office
 office:  $(ESPHOME_BIN)
 	 $(ESPHOME_BIN) run office.yaml
+
+.PHONY: living
+living:  $(ESPHOME_BIN)
+	 $(ESPHOME_BIN) run living.yaml
