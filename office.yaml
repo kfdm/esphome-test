@@ -61,7 +61,7 @@ light:
     num_leds: 1
     rgb_order: GRB
     id: status_led
-    name: ${friendly_name} Light
+    name: ${friendly_name} LED
     effects:
       - random:
       - flicker:
