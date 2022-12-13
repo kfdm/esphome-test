@@ -33,6 +33,18 @@ sensor:
     humidity:
       id: humidity
       name: "${friendly_name} Humidity"
+  - platform: bh1750
+    name: "${friendly_name} Illuminance"
+    address: 0x23
+    update_interval: 60s
+  - platform: qmp6988
+    temperature:
+      name: ${friendly_name} Temperature (Extra)"
+      oversampling: 16x
+    pressure:
+      name: "${friendly_name} Pressure"
+      oversampling: 16x
+    address: 0x70
 
 binary_sensor:
   # https://esphome.io/components/switch/gpio
@@ -55,8 +67,6 @@ light:
     rgb_order: GRB
     id: status_led
     name: ${friendly_name} Light
-    on_turn_on:
-
     effects:
       - random:
       - flicker:
