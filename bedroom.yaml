@@ -40,10 +40,14 @@ sensor:
     humidity:
       id: humidity
       name: "${friendly_name} Humidity"
+  # https://docs.m5stack.com/en/unit/dlight
+  # https://esphome.io/components/sensor/bh1750.html
   - platform: bh1750
     name: "${friendly_name} Illuminance"
     address: 0x23
     update_interval: 60s
+  # https://docs.m5stack.com/en/unit/bps
+  # https://esphome.io/components/sensor/qmp6988.html
   - platform: qmp6988
     temperature:
       name: ${friendly_name} Temperature (Extra)"
