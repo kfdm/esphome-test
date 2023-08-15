@@ -1,95 +1,142 @@
 substitutions:
-  devicename: m5stickcplus-kitchen
+  devicename: m5stick-atom-kitchen
   friendly_name: Kitchen
 
 esphome:
   name: $devicename
+  min_version: 2023.5.0
 
 packages:
   base: !include common/base.yaml
 
-# https://docs.m5stack.com/en/core/m5stickc_plus
+# https://docs.m5stack.com/en/atom/atomecho
 esp32:
-  board: m5stick-c
+  board: m5stack-atom
   framework:
     type: arduino
 
-# https://esphome.io/components/esp32_ble_beacon.html
-esp32_ble_beacon:
-  type: iBeacon
-  uuid: 43271eec-ec0a-72ac-0500-ad0121ffd43e
-  major: 1 # Apartment
-  minor: 2 # Kitchen
-
 i2c:
-  - id: hat
-    sda: 0
-    scl: 26
-    scan: true
-  - id: bottom
-    sda: 32
-    scl: 33
-    scan: True
+  sda: 26
+  scl: 32
+  scan: true
+
+# https://esphome.io/components/esp32_ble_beacon.html
+# esp32_ble_beacon:
+#   type: iBeacon
+#   uuid: 43271eec-ec0a-72ac-0500-ad0121ffd43e
+#   major: 1 # Apartment
+#   minor: 2 # Kitchen
+
+
+i2s_audio:
+  i2s_lrclk_pin: GPIO33
+  i2s_bclk_pin: GPIO19
+
+microphone:
+  - platform: i2s_audio
+    id: echo_microphone
+    i2s_din_pin: GPIO23
+    adc_type: external
+    pdm: true
+
+voice_assistant:
+  microphone: echo_microphone
+  on_start:
+    - light.turn_on:
+        id: led
+        blue: 100%
+        red: 0%
+        green: 0%
+        effect: none
+  on_tts_start:
+    - light.turn_on:
+        id: led
+        blue: 0%
+        red: 0%
+        green: 100%
+        effect: none
+  on_tts_end:
+    - media_player.play_media: !lambda return x;
+    - light.turn_on:
+        id: led
+        blue: 0%
+        red: 0%
+        green: 100%
+        effect: pulse
+  on_end:
+    - delay: 1s
+    - wait_until:
+        not:
+          media_player.is_playing: media_out
+    - light.turn_off: led
+  on_error:
+    - light.turn_on:
+        id: led
+        blue: 0%
+        red: 100%
+        green: 0%
+        effect: none
+    - delay: 1s
+    - light.turn_off: led
 
 binary_sensor:
   - platform: gpio
     pin:
-      number: GPIO37
-      inverted: true
-    name: ${friendly_name} Button A
-    on_press:
-      then:
-        - switch.toggle: led1
-  - platform: gpio
-    pin:
       number: GPIO39
       inverted: true
-    name: ${friendly_name} Button B
-    on_press:
-      then:
-        - switch.toggle: led1
+    name: Button
+    id: echo_button
+    on_multi_click:
+      - timing:
+          - ON FOR AT MOST 350ms
+          - OFF FOR AT LEAST 10ms
+        then:
+          - media_player.toggle: media_out
+      - timing:
+          - ON FOR AT LEAST 350ms
+        then:
+          - voice_assistant.start:
+      - timing:
+          - ON FOR AT LEAST 350ms
+          - OFF FOR AT LEAST 10ms
+        then:
+          - voice_assistant.stop:
 
 sensor:
-  # https://docs.m5stack.com/en/hat/hat_envIII
-  # https://esphome.io/components/sensor/sht3xd.html
-  - platform: sht3xd
-    i2c_id: hat
-    address: 0x44
+  # https://docs.m5stack.com/en/unit/co2
+  # https://esphome.io/components/sensor/scd4x.html
+  - platform: scd4x
+    address: 0x62
     update_interval: 60s
+    co2:
+      id: co2
+      name: "${friendly_name} CO2"
     temperature:
-      name: ${friendly_name} SHT30 Temperature
+      id: temperature
+      name: "${friendly_name} Temperature"
     humidity:
-      name: ${friendly_name} SHT30 Humidity
+      id: humidity
+      name: "${friendly_name} Humidity"
 
-  # https://esphome.io/components/sensor/qmp6988.html
-  - platform: qmp6988
-    i2c_id: hat
-    address: 0x70
-    update_interval: 60s
-    temperature:
-      name: ${friendly_name} QMP6988 Temperature
-    pressure:
-      name: ${friendly_name} QMP6988 Pressure
-    iir_filter: 2x
+media_player:
+  - platform: i2s_audio
+    id: media_out
+    name: None
+    dac_type: external
+    i2s_dout_pin: GPIO22
+    mode: mono
 
-  # https://docs.m5stack.com/en/unit/tvoc
-  # https://esphome.io/components/sensor/sgp30.html
-  - platform: sgp30
-    i2c_id: bottom
-    address: 0x58
-    update_interval: 60s
-    eco2:
-      name: ${friendly_name} SGP30 eCO2
-      accuracy_decimals: 1
-    tvoc:
-      name: ${friendly_name} SGP30 TVOC
-      accuracy_decimals: 1
-    store_baseline: yes
-
-switch:
-  - platform: gpio
-    pin:
-      number: GPIO10
-      inverted: true
-    name: ${friendly_name} Led
-    id: led1
+light:
+  - platform: esp32_rmt_led_strip
+    id: led
+    name: None
+    pin: GPIO27
+    default_transition_length: 0s
+    chipset: SK6812
+    num_leds: 1
+    rgb_order: grb
+    rmt_channel: 0
+    effects:
+      - pulse:
+          transition_length: 250ms
+          update_interval: 250ms

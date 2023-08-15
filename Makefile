@@ -1,7 +1,7 @@
 VENV := .venv
 PIP_BIN := $(VENV)/bin/pip
 ESP_TOOL := $(VENV)/bin/esptool.py
-SYSTEM_PYTON := python3.9
+SYSTEM_PYTHON ?= python3.10
 ESPHOME_BIN := $(VENV)/bin/esphome
 
 .PHONY: dashboard
@@ -9,7 +9,7 @@ dashboard: $(ESPHOME_BIN)
 	$(ESPHOME_BIN) dashboard .
 
 $(PIP_BIN):
-	$(SYSTEM_PYTON) -m venv $(VENV)
+	$(SYSTEM_PYTHON) -m venv $(VENV)
 
 $(ESPHOME_BIN): $(PIP_BIN)
 	$(PIP_BIN) install esphome
