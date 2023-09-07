@@ -45,6 +45,10 @@ living:  $(ESPHOME_BIN)
 washroom:  $(ESPHOME_BIN)
 	 $(ESPHOME_BIN) run washroom.yaml
 
+.PHONY: guestroom
+guestroom:  $(ESPHOME_BIN)
+	 $(ESPHOME_BIN) run guestroom.yaml
+
 .PHONY: bell
 bell:  $(ESPHOME_BIN)
 	 $(ESPHOME_BIN) run bell.yaml  --device bell.local

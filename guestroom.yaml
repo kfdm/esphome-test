@@ -1,0 +1,68 @@
+substitutions:
+  devicename: m5stick-atom-guestroom
+  friendly_name: Guestroom
+
+esphome:
+  name: $devicename
+
+packages:
+  base: !include common/base.yaml
+
+# https://docs.m5stack.com/en/core/atom_lite
+esp32:
+  board: m5stack-atom
+  framework:
+    type: arduino
+i2c:
+  sda: 26
+  scl: 32
+  scan: true
+
+# https://esphome.io/components/esp32_ble_beacon.html
+esp32_ble_beacon:
+  type: iBeacon
+  uuid: 43271eec-ec0a-72ac-0500-ad0121ffd43e
+  major: 1 # Apartment
+  minor: 6 # Guestroom
+
+sensor:
+  # https://docs.m5stack.com/en/unit/co2
+  # https://esphome.io/components/sensor/scd4x.html
+  - platform: scd4x
+    address: 0x62
+    update_interval: 60s
+    co2:
+      id: co2
+      name: "${friendly_name} CO2"
+    temperature:
+      id: temperature
+      name: "${friendly_name} Temperature"
+    humidity:
+      id: humidity
+      name: "${friendly_name} Humidity"
+
+binary_sensor:
+  # https://esphome.io/components/switch/gpio
+  - platform: gpio
+    pin:
+      number: 39
+      inverted: true
+    id: button
+    name: ${friendly_name} Button
+    on_press:
+      then:
+        - light.toggle: status_led
+
+light:
+  # https://esphome.io/components/light/index.html
+  - platform: fastled_clockless
+    chipset: SK6812
+    pin: 27
+    num_leds: 1
+    rgb_order: GRB
+    id: status_led
+    name: ${friendly_name} LED
+    effects:
+      - random:
+      - flicker:
+      - addressable_rainbow:
