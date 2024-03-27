@@ -49,6 +49,10 @@ washroom:  $(ESPHOME_BIN)
 guestroom:  $(ESPHOME_BIN)
 	 $(ESPHOME_BIN) run guestroom.yaml
 
+.PHONY: catbox
+catbox:  $(ESPHOME_BIN)
+	 $(ESPHOME_BIN) run catbox.yaml
+
 .PHONY: bell
 bell:  $(ESPHOME_BIN)
 	 $(ESPHOME_BIN) run bell.yaml  --device bell.local

@@ -1,0 +1,35 @@
+substitutions:
+  devicename: m5stack-atom-catbox
+  friendly_name: Cat Box
+
+esphome:
+  name: $devicename
+
+packages:
+  base: !include common/base.yaml
+
+# https://docs.m5stack.com/en/core/AtomS3%20Lite
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: arduino
+
+i2c:
+  sda: 2
+  scl: 1
+  scan: true
+
+sensor:
+  # https://docs.m5stack.com/en/unit/tvoc
+  # https://esphome.io/components/sensor/sgp30.html
+  - platform: sgp30
+    # Current eCO2 baseline: 0x98DD, TVOC baseline: 0x9721
+    baseline:
+      eco2_baseline: 0x98DD
+      tvoc_baseline: 0x9721
+    eco2:
+      name: "$friendly_name eCO2"
+      accuracy_decimals: 1
+    tvoc:
+      name: "$friendly_name TVOC"
+      accuracy_decimals: 1
