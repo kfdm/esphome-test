@@ -1,5 +1,5 @@
 substitutions:
-  devicename: m5stick-atom-living
+  devicename: m5stack-atom-living
   friendly_name: Living Room
 
 esphome:

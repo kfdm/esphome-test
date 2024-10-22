@@ -1,5 +1,5 @@
 substitutions:
-  devicename: m5stick-atom-kitchen
+  devicename: m5stack-atom-kitchen
   friendly_name: Kitchen
 
 esphome:
@@ -26,7 +26,6 @@ i2c:
 #   uuid: 43271eec-ec0a-72ac-0500-ad0121ffd43e
 #   major: 1 # Apartment
 #   minor: 2 # Kitchen
-
 
 i2s_audio:
   i2s_lrclk_pin: GPIO33

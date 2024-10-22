@@ -35,7 +35,3 @@ guestroom:
 .PHONY: catbox
 catbox:
 	 $(ESPHOME_BIN) run catbox.yaml
-
-.PHONY: bell
-bell:
-	 $(ESPHOME_BIN) run bell.yaml  --device bell.local

@@ -1,5 +1,5 @@
 substitutions:
-  devicename: m5stick-atom-guestroom
+  devicename: m5stack-atom-guestroom
   friendly_name: Guestroom
 
 esphome:

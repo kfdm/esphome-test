@@ -1,5 +1,5 @@
 substitutions:
-  devicename: m5stick-atom-office
+  devicename: m5stack-atom-office
   friendly_name: Office
 
 esphome:

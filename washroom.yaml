@@ -1,5 +1,5 @@
 substitutions:
-  devicename: m5stick-atom-washroom
+  devicename: m5stack-atom-washroom
   friendly_name: Washroom
 
 esphome:

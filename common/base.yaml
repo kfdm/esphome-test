@@ -9,8 +9,8 @@ api:
 
 # https://esphome.io/components/ota.html
 ota:
-- platform: esphome
-  password: ""
+  - platform: esphome
+    password: ""
 
 # https://esphome.io/components/web_server.html
 web_server:
@@ -31,3 +31,9 @@ sensor:
 switch:
   - platform: restart
     name: ${friendly_name} Restart
+
+# https://esphome.io/components/text_sensor/version.html
+text_sensor:
+  - platform: version
+    name: "${friendly_name} ESPHome Version"
+    hide_timestamp: true
