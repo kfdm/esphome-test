@@ -9,6 +9,7 @@ api:
 
 # https://esphome.io/components/ota.html
 ota:
+- platform: esphome
   password: ""
 
 # https://esphome.io/components/web_server.html
