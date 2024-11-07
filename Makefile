@@ -39,3 +39,7 @@ catbox:
 .PHONY: calendar
 calendar:
 	$(ESPHOME_BIN) run calendar.yaml
+
+.PHONY: socket-a
+socket-a:
+	$(ESPHOME_BIN) run socket-a.yaml
