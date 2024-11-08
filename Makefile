@@ -43,3 +43,7 @@ calendar:
 .PHONY: socket-a
 socket-a:
 	$(ESPHOME_BIN) run socket-a.yaml
+
+.PHONY: socket-b
+socket-b:
+	$(ESPHOME_BIN) run socket-b.yaml
