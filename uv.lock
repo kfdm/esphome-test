@@ -394,7 +394,7 @@ wheels = [
 
 [[package]]
 name = "esphome"
-version = "2024.10.1"
+version = "2024.10.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aioesphomeapi" },
@@ -420,9 +420,9 @@ dependencies = [
     { name = "voluptuous" },
     { name = "zeroconf" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5d/66/8eb737616b90caf602789418749f6d27ddea3524a4cf438738acc985618f/esphome-2024.10.1.tar.gz", hash = "sha256:b3ef72a2a38b58251349e31a1b71cc0c8ea4c1f8793406fe9cb0c4eea1b23cce", size = 2660678 }
+sdist = { url = "https://files.pythonhosted.org/packages/8c/14/5c0df964abd46acc0d7df4bffe84c139283985030f4a26f18dba4e791720/esphome-2024.10.3.tar.gz", hash = "sha256:bd35003604967918347f015cf718c00dcf02ca17d372af048242278784279f1c", size = 2660900 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f9/7d/148c5be581d459ee1b202c922afdd52dfef88c66394692ff604b743b879c/esphome-2024.10.1-py3-none-any.whl", hash = "sha256:fb3c7765bc8fa591bb83d83b63fdd2376a4fedf3b19a9decf8f7da3eca0436d1", size = 4030407 },
+    { url = "https://files.pythonhosted.org/packages/37/41/f335c39c4a8fc8a0e108d2b7d73c9ac262151c735c5c3cdb67890c10af8c/esphome-2024.10.3-py3-none-any.whl", hash = "sha256:b6a22c627c7f683ce7704bf4c13bdee37fb5301db0a974bc940843c8662ba892", size = 4030704 },
 ]
 
 [[package]]
