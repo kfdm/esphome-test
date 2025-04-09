@@ -3,7 +3,7 @@ substitutions:
   friendly_name: Kitchen
 
 esphome:
-  name: $devicename
+  name: ${devicename}
   min_version: 2023.5.0
 
 packages:
@@ -85,21 +85,7 @@ binary_sensor:
       inverted: true
     name: Button
     id: echo_button
-    on_multi_click:
-      - timing:
-          - ON FOR AT MOST 350ms
-          - OFF FOR AT LEAST 10ms
-        then:
-          - media_player.toggle: media_out
-      - timing:
-          - ON FOR AT LEAST 350ms
-        then:
-          - voice_assistant.start:
-      - timing:
-          - ON FOR AT LEAST 350ms
-          - OFF FOR AT LEAST 10ms
-        then:
-          - voice_assistant.stop:
+
 
 sensor:
   # https://docs.m5stack.com/en/unit/co2
@@ -120,7 +106,7 @@ sensor:
 media_player:
   - platform: i2s_audio
     id: media_out
-    name: None
+    # name: None
     dac_type: external
     i2s_dout_pin: GPIO22
     mode: mono
@@ -128,7 +114,7 @@ media_player:
 light:
   - platform: esp32_rmt_led_strip
     id: led
-    name: None
+    # name: None
     pin: GPIO27
     default_transition_length: 0s
     chipset: SK6812
