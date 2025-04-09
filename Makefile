@@ -35,3 +35,15 @@ guestroom:
 .PHONY: catbox
 catbox:
 	 $(ESPHOME_BIN) run catbox.yaml
+
+.PHONY: calendar
+calendar:
+	$(ESPHOME_BIN) run calendar.yaml
+
+.PHONY: socket-a
+socket-a:
+	$(ESPHOME_BIN) run socket-a.yaml
+
+.PHONY: socket-b
+socket-b:
+	$(ESPHOME_BIN) run socket-b.yaml

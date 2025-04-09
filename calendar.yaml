@@ -1,0 +1,125 @@
+substitutions:
+  devicename: inkplate-calendar
+  friendly_name: Calendar
+
+esphome:
+  name: $devicename
+
+packages:
+  base: !include common/base.yaml
+
+# https://esphome.io/components/display/inkplate6.html
+esp32:
+  board: esp-wrover-kit
+
+switch:
+  - platform: restart
+    name: "Inkplate Reboot"
+    id: reboot
+
+  - platform: gpio
+    id: battery_read_mosfet
+    pin:
+      pca6416a: pca6416a_hub
+      number: 9
+      inverted: true
+
+  - platform: template
+    name: "Inkplate Greyscale mode"
+    lambda: return id(inkplate_display).get_greyscale();
+    turn_on_action:
+      - lambda: id(inkplate_display).set_greyscale(true);
+    turn_off_action:
+      - lambda: id(inkplate_display).set_greyscale(false);
+
+  - platform: template
+    name: "Inkplate Partial Updating"
+    lambda: return id(inkplate_display).get_partial_updating();
+    turn_on_action:
+      - lambda: id(inkplate_display).set_partial_updating(true);
+    turn_off_action:
+      - lambda: id(inkplate_display).set_partial_updating(false);
+
+sensor:
+  - platform: adc
+    id: battery_voltage
+    update_interval: never
+    attenuation: 12db
+    pin: 35
+  - platform: template
+    name: "Inkplate Battery Voltage"
+    lambda: |-
+      id(battery_read_mosfet).turn_on();
+      delay(1);
+      float adc = id(battery_voltage).sample();
+      id(battery_read_mosfet).turn_off();
+      return adc;
+    filters:
+      - multiply: 2
+
+i2c:
+
+pca6416a:
+  - id: pca6416a_hub
+    address: 0x20
+
+binary_sensor:
+  - platform: status
+    name: "Inkplate Status"
+    id: system_status
+
+time:
+  - platform: sntp
+    id: esptime
+
+font:
+  - file: "gfonts://Helvetica"
+    id: helvetica_96
+    size: 96
+  - file: "gfonts://Helvetica"
+    id: helvetica_48
+    size: 48
+
+display:
+  - platform: inkplate6
+    id: inkplate_display
+    model: inkplate_10
+    update_interval: 60s
+
+    ckv_pin: 32
+    sph_pin: 33
+    gmod_pin:
+      pca6416a: pca6416a_hub
+      number: 1
+    gpio0_enable_pin:
+      pca6416a: pca6416a_hub
+      number: 8
+    oe_pin:
+      pca6416a: pca6416a_hub
+      number: 0
+    spv_pin:
+      pca6416a: pca6416a_hub
+      number: 2
+    powerup_pin:
+      pca6416a: pca6416a_hub
+      number: 4
+    wakeup_pin:
+      pca6416a: pca6416a_hub
+      number: 3
+    vcom_pin:
+      pca6416a: pca6416a_hub
+      number: 5
+
+    lambda: |-
+      it.fill(COLOR_ON);
+
+      it.print(100, 100, id(helvetica_48), COLOR_OFF, TextAlign::TOP_LEFT, "ESPHome");
+
+      it.strftime(400, 300, id(helvetica_48), COLOR_OFF, TextAlign::CENTER, "%Y-%m-%d", id(esptime).now());
+      it.strftime(400, 400, id(helvetica_96), COLOR_OFF, TextAlign::CENTER, "%H:%M", id(esptime).now());
+
+      if (id(system_status).state) {
+        it.print(700, 100, id(helvetica_48), COLOR_OFF, TextAlign::TOP_RIGHT, "Online");
+      } else {
+        it.print(700, 100, id(helvetica_48), COLOR_OFF, TextAlign::TOP_RIGHT, "Offline");
+      }
