@@ -3,8 +3,7 @@ name = "esphome-test"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
-    "esphome>=2024.10.1",
-    "pillow==10.2.0",
+    "esphome>=2025.3.3",
 ]
