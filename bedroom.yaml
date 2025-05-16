@@ -39,7 +39,7 @@ sensor:
   # https://esphome.io/components/sensor/qmp6988.html
   - platform: qmp6988
     temperature:
-      name: Temperature (Extra)"
+      name: Temperature (Extra)
       oversampling: 16x
     pressure:
       name: "Pressure"
