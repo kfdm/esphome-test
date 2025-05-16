@@ -1,9 +1,7 @@
-substitutions:
-  devicename: m5stack-atom-guestroom
-  friendly_name: Guestroom
-
+# http://homeassistant.local:8123/config/devices/device/f0b1f738cb977be61c245c8d0cbb09e0
 esphome:
-  name: $devicename
+  name: m5stack-atom-guestroom
+  friendly_name: Guestroom
 
 packages:
   base: !include common/base.yaml
@@ -24,10 +22,10 @@ sensor:
     update_interval: 60s
     co2:
       id: co2
-      name: "${friendly_name} CO2"
+      name: "CO2"
     temperature:
       id: temperature
-      name: "${friendly_name} Temperature"
+      name: "Temperature"
     humidity:
       id: humidity
-      name: "${friendly_name} Humidity"
+      name: "Humidity"
