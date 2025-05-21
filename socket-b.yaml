@@ -1,13 +1,13 @@
+# http://homeassistant.local:8123/config/devices/device/494821b473871bea23b84233953cf615
 substitutions:
-  devicename: m5stack-socket-b
-  friendly_name: Socket B
   relay_restore_mode: RESTORE_DEFAULT_ON
   current_limit: "16"
   update_interval: 2s
   sensor_update_interval: 10s
 
 esphome:
-  name: $devicename
+  name: m5stack-socket-b
+  friendly_name: Socket B
 
 packages:
   base: !include common/base.yaml

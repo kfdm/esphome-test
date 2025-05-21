@@ -1,9 +1,7 @@
-substitutions:
-  devicename: m5stack-atom-washroom
-  friendly_name: Washroom
-
+# http://homeassistant.local:8123/config/devices/device/71d66aeb66f4d940ddac0cee7438d768
 esphome:
-  name: $devicename
+  name: m5stack-atom-washroom
+  friendly_name: Washroom
 
 packages:
   base: !include common/base.yaml
@@ -24,10 +22,10 @@ sensor:
     update_interval: 60s
     co2:
       id: co2
-      name: "${friendly_name} CO2"
+      name: "CO2"
     temperature:
       id: temperature
-      name: "${friendly_name} Temperature"
+      name: "Temperature"
     humidity:
       id: humidity
-      name: "${friendly_name} Humidity"
+      name: "Humidity"

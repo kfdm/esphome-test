@@ -15,7 +15,7 @@ binary_sensor:
       number: 39
       inverted: true
     id: button
-    name: ${friendly_name} Button
+    name: Button
     on_press:
       then:
         - light.toggle: status_led
@@ -28,7 +28,7 @@ light:
     num_leds: 1
     rgb_order: GRB
     id: status_led
-    name: ${friendly_name} LED
+    name: LED
     effects:
       - random:
       - flicker:
