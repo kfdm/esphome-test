@@ -1,28 +1,21 @@
-substitutions:
-  devicename: inkplate-calendar
-  friendly_name: Calendar
-
 esphome:
-  name: $devicename
+  name: inkplate-calendar
+  friendly_name: Calendar
 
 packages:
   base: !include common/base.yaml
 
+# https://soldered.com/product/inkplate-10-9-7-e-paper-board-copy/
 # https://esphome.io/components/display/inkplate6.html
 esp32:
   board: esp-wrover-kit
 
 switch:
-  - platform: restart
-    name: "Inkplate Reboot"
-    id: reboot
-
   - platform: gpio
     id: battery_read_mosfet
     pin:
       pca6416a: pca6416a_hub
       number: 9
-      inverted: true
 
   - platform: template
     name: "Inkplate Greyscale mode"
@@ -48,14 +41,20 @@ sensor:
     pin: 35
   - platform: template
     name: "Inkplate Battery Voltage"
+    unit_of_measurement: "V"
+    accuracy_decimals: 3
     lambda: |-
+      // Enable MOSFET to connect battery voltage divider
       id(battery_read_mosfet).turn_on();
-      delay(1);
+      // Wait for voltage to stabilize
+      delay(5);
+      // Sample ADC value
       float adc = id(battery_voltage).sample();
+      // Disable MOSFET to save power
       id(battery_read_mosfet).turn_off();
       return adc;
     filters:
-      - multiply: 2
+      - multiply: 2 # Compensate for voltage divider (1:2 ratio)
 
 i2c:
 
@@ -83,8 +82,10 @@ font:
 display:
   - platform: inkplate6
     id: inkplate_display
+    greyscale: true
+    partial_updating: false
+    update_interval: never
     model: inkplate_10
-    update_interval: 60s
 
     ckv_pin: 32
     sph_pin: 33
