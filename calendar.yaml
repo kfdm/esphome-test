@@ -84,7 +84,8 @@ display:
     id: inkplate_display
     greyscale: true
     partial_updating: false
-    update_interval: never
+    # Update every minute to show new time.
+    update_interval: 60s
     model: inkplate_10
 
     ckv_pin: 32
