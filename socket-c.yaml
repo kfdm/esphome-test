@@ -1,0 +1,15 @@
+# http://homeassistant.local:8123/config/devices/device/494821b473871bea23b84233953cf615
+substitutions:
+  relay_restore_mode: RESTORE_DEFAULT_ON
+  current_limit: "16"
+  update_interval: 2s
+  sensor_update_interval: 10s
+
+esphome:
+  name: m5stack-socket-c
+  friendly_name: Socket C
+
+packages:
+  base: !include common/base.yaml
+  atom: !include common/atom.yaml
+  socket: !include common/socket.yaml
