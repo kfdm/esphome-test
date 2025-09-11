@@ -19,6 +19,9 @@ switch:
     id: relay
     restore_mode: ${relay_restore_mode}
 
+wifi:
+  power_save_mode: none
+
 sensor:
   # https://esphome.io/components/sensor/cse7766.html
   - platform: cse7766
