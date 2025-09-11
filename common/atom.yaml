@@ -2,7 +2,7 @@
 esp32:
   board: m5stack-atom
   framework:
-    type: arduino
+    type: esp-idf
 i2c:
   sda: 26
   scl: 32
@@ -21,8 +21,8 @@ binary_sensor:
         - light.toggle: status_led
 
 light:
-  # https://esphome.io/components/light/index.html
-  - platform: fastled_clockless
+  # https://esphome.io/components/light/esp32_rmt_led_strip/
+  - platform: esp32_rmt_led_strip
     chipset: SK6812
     pin: 27
     num_leds: 1
