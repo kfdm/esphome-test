@@ -7,8 +7,12 @@ packages:
 
 # https://soldered.com/product/inkplate-10-9-7-e-paper-board-copy/
 # https://esphome.io/components/display/inkplate6.html
+# https://esphome.io/components/esp32/
 esp32:
   board: esp-wrover-kit
+  cpu_frequency: "240MHz"
+  framework:
+    type: esp-idf
 
 switch:
   - platform: gpio
