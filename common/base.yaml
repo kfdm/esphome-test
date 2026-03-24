@@ -5,7 +5,6 @@ logger:
 # Enable Home Assistant API
 # https://esphome.io/components/api.html
 api:
-  password: ""
 
 # https://esphome.io/components/ota.html
 ota:
@@ -38,3 +37,4 @@ text_sensor:
   - platform: version
     name: "ESPHome Version"
     hide_timestamp: true
+    hide_hash: true

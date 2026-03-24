@@ -83,8 +83,10 @@ font:
     id: helvetica_48
     size: 48
 
+psram:
+
 display:
-  - platform: inkplate6
+  - platform: inkplate
     id: inkplate_display
     greyscale: true
     partial_updating: false
