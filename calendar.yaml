@@ -1,6 +1,13 @@
 esphome:
   name: inkplate-calendar
   friendly_name: Calendar
+  on_boot:
+    priority: -100 # Runs late in the boot cycle for safety
+    then:
+      - delay: 15s # Gives Wi-Fi and SNTP time to connect
+      - lambda: |-
+          ESP_LOGI("STARTUP", "Forcing initial background image download...");
+          id(django_bg_canvas).update();
 
 packages:
   base: !include common/base.yaml
@@ -13,6 +20,9 @@ esp32:
   cpu_frequency: "240MHz"
   framework:
     type: esp-idf
+    sdkconfig_options:
+      CONFIG_ESP_TASK_WDT_TIMEOUT_S: "45"
+      CONFIG_ESP_INT_WDT_TIMEOUT_MS: "5000"
 
 switch:
   - platform: gpio
@@ -20,22 +30,6 @@ switch:
     pin:
       pca6416a: pca6416a_hub
       number: 9
-
-  - platform: template
-    name: "Inkplate Greyscale mode"
-    lambda: return id(inkplate_display).get_greyscale();
-    turn_on_action:
-      - lambda: id(inkplate_display).set_greyscale(true);
-    turn_off_action:
-      - lambda: id(inkplate_display).set_greyscale(false);
-
-  - platform: template
-    name: "Inkplate Partial Updating"
-    lambda: return id(inkplate_display).get_partial_updating();
-    turn_on_action:
-      - lambda: id(inkplate_display).set_partial_updating(true);
-    turn_off_action:
-      - lambda: id(inkplate_display).set_partial_updating(false);
 
 sensor:
   - platform: adc
@@ -60,11 +54,18 @@ sensor:
     filters:
       - multiply: 2 # Compensate for voltage divider (1:2 ratio)
 
+# Fixed: Explicitly declared the Inkplate 10 native hardware I2C pins
 i2c:
+  sda: 21
+  scl: 22
 
 pca6416a:
   - id: pca6416a_hub
     address: 0x20
+    # Primary expander for display control and additional I/O
+  - id: pca6416a_hub2
+    address: 0x21
+    # Secondary expander for additional I/O
 
 binary_sensor:
   - platform: status
@@ -74,24 +75,69 @@ binary_sensor:
 time:
   - platform: sntp
     id: esptime
+    on_time:
+      - seconds: 0
+        then:
+          - lambda: |-
+              ESP_LOGI("TIMER", "Refreshing display...");
+              id(inkplate_display).update();
+      - minutes: /30
+        seconds: 10
+        then:
+          - lambda: |-
+              ESP_LOGI("TIMER", "Fetching new background image...");
+              id(django_bg_canvas).update();
 
 font:
   - file: "gfonts://Helvetica"
-    id: helvetica_96
+    id: local_clock_font
     size: 96
-  - file: "gfonts://Helvetica"
-    id: helvetica_48
-    size: 48
 
 psram:
+  mode: quad
+  speed: 80MHz
+
+button:
+  - platform: template
+    name: "Refresh E-Paper Image"
+    id: refresh_image_button
+    icon: "mdi:refresh"
+    on_press:
+      then:
+        - lambda: |-
+            ESP_LOGI("REFRESH", "Clearing cache and triggering download...");
+            id(django_bg_canvas).release();
+            // Force the online_image component to download immediately
+            id(django_bg_canvas).update();
+
+globals:
+  - id: remote_clock_pos_x
+    type: int
+    restore_value: no
+    initial_value: "600"
+  - id: remote_clock_pos_y
+    type: int
+    restore_value: no
+    initial_value: "412"
+
+http_request:
+  useragent: esphome/inkplate10
+  timeout: 15s
+
+online_image:
+  - url: !secret inkplate_background
+    format: BMP
+    type: BINARY
+    id: django_bg_canvas
+    # Fix the boot bug: Set update_interval to never and rely ONLY on your safe 15s boot trigger
+    update_interval: never
 
 display:
   - platform: inkplate
     id: inkplate_display
-    greyscale: true
+    greyscale: false
     partial_updating: false
-    # Update every minute to show new time.
-    update_interval: 60s
+    update_interval: never
     model: inkplate_10
 
     ckv_pin: 32
@@ -119,15 +165,20 @@ display:
       number: 5
 
     lambda: |-
-      it.fill(COLOR_ON);
-
-      it.print(100, 100, id(helvetica_48), COLOR_OFF, TextAlign::TOP_LEFT, "ESPHome");
-
-      it.strftime(400, 300, id(helvetica_48), COLOR_OFF, TextAlign::CENTER, "%Y-%m-%d", id(esptime).now());
-      it.strftime(400, 400, id(helvetica_96), COLOR_OFF, TextAlign::CENTER, "%H:%M", id(esptime).now());
-
-      if (id(system_status).state) {
-        it.print(700, 100, id(helvetica_48), COLOR_OFF, TextAlign::TOP_RIGHT, "Online");
+      // Check if the image has valid data allocated in memory
+      if (id(django_bg_canvas).get_width() > 0) {
+        it.image(0, 0, id(django_bg_canvas));
       } else {
-        it.print(700, 100, id(helvetica_48), COLOR_OFF, TextAlign::TOP_RIGHT, "Offline");
+        ESP_LOGW("DISPLAY", "Background image buffer is empty. Drawing clock only.");
       }
+
+      // Draw the clock layer safely
+      it.strftime(
+        id(remote_clock_pos_x), 
+        id(remote_clock_pos_y), 
+        id(local_clock_font), 
+        Color::BLACK, 
+        TextAlign::CENTER, 
+        "%H:%M", 
+        id(esptime).now()
+      );
