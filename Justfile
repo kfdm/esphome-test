@@ -66,3 +66,8 @@ socket-c:
 [group('socket')]
 socket-d:
     @just run socket-d.yaml
+
+# http://m5stack-socket-e.local
+[group('socket')]
+socket-e:
+    @just run socket-e.yaml
