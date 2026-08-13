@@ -49,3 +49,8 @@ socket-b:
 [group('socket')]
 socket-c:
     @just run socket-c.yaml
+
+# https://m5stack-socket-d.local
+[group('socket')]
+socket-d:
+    @just run socket-d.yaml
