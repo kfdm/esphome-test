@@ -1,12 +1,21 @@
 _help:
-    @just --list --unsorted     
+    @just --list --unsorted
 
 # esphome run
+[group('dev')]
 run *args:
     uv run esphome run {{ args }}
 
+# Show dashboard
+[group('dev')]
 dashboard *args:
     uv run esphome dashboard . {{ args }}
+
+# Format files
+[group('dev')]
+format:
+    just --fmt
+    prek --all-files
 
 [group('m5atom')]
 kitchen:

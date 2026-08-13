@@ -174,11 +174,11 @@ display:
 
       // Draw the clock layer safely
       it.strftime(
-        id(remote_clock_pos_x), 
-        id(remote_clock_pos_y), 
-        id(local_clock_font), 
-        Color::BLACK, 
-        TextAlign::CENTER, 
-        "%H:%M", 
+        id(remote_clock_pos_x),
+        id(remote_clock_pos_y),
+        id(local_clock_font),
+        Color::BLACK,
+        TextAlign::CENTER,
+        "%H:%M",
         id(esptime).now()
       );
