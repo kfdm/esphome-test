@@ -47,19 +47,22 @@ catbox:
 calendar:
     @just run calendar.yaml
 
+# http://m5stack-socket-a.local
 [group('socket')]
 socket-a:
     @just run socket-a.yaml
 
+# http://m5stack-socket-b.local
 [group('socket')]
 socket-b:
     @just run socket-b.yaml
 
+# http://m5stack-socket-c.local
 [group('socket')]
 socket-c:
     @just run socket-c.yaml
 
-# https://m5stack-socket-d.local
+# http://m5stack-socket-d.local
 [group('socket')]
 socket-d:
     @just run socket-d.yaml
